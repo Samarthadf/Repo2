@@ -1,0 +1,93 @@
+{
+	"name": "df_dqchecks",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sorce",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerAccNo as string,",
+				"          CustName as string,",
+				"          Amount as string,",
+				"          Category as string,",
+				"          Status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(Amount = round(toFloat(Amount),2)) ~> derivedColumn1",
+				"derivedColumn1 split(!isNull(CustomerAccNo) && isInteger(CustomerAccNo) && length(toString(CustomerAccNo)) >= 8 && length(toString(CustomerAccNo)) <= 12 && !isNull(CustName) && length(CustName) < 50 && !isNull(Amount) && isFloat(toString(Amount)) && round(Amount, 2) == Amount && (Category == 'Premium' || Category == 'Platinum' || Category == 'Diamond' || Category == 'Gold'),",
+				"     disjoint: false) ~> split1@(validcolumns, invalid)",
+				"split1@validcolumns select(mapColumn(",
+				"          CustomerAccNo,",
+				"          CustName,",
+				"          Amount,",
+				"          Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"split1@invalid select(mapColumn(",
+				"          CustomerAccNo,",
+				"          CustName,",
+				"          Amount,",
+				"          Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustomerAccNo as string,",
+				"          CustName as string,",
+				"          Amount as string,",
+				"          Category as string,",
+				"          Status as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
+			]
+		}
+	}
+}
