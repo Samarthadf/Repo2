@@ -1,0 +1,27 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Names",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Names",
+					"value": "Ronny James"
+				}
+			}
+		],
+		"variables": {
+			"Names": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
