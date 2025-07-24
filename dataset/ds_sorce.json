@@ -2,7 +2,7 @@
 	"name": "ds_sorce",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Ls_blob",
+			"referenceName": "ls_storage2",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
