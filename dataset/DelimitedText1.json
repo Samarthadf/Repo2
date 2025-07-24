@@ -2,7 +2,7 @@
 	"name": "DelimitedText1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Ls_blob",
+			"referenceName": "ls_storage2",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "opdkdl"
+				"container": "inputs"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
